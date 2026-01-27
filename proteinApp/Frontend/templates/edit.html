@@ -269,28 +269,3 @@
 
 </html>
 
-
-
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Protein</title>
-</head>
-<body>
-    <h1>Edit Protein</h1>
-
-    <form method="POST">
-        <label>Protein Name:</label><br>
-        <input type="text" name="protein_name" value="{{ protein.name }}" required><br><br>
-
-        <label>Amino Acid Sequence:</label><br>
-        <textarea name="sequence" rows="6" cols="50" required>{{ protein.sequence }}</textarea><br><br>
-
-        <button type="submit">Update Protein</button>
-    </form>
-
-    <br><a href="/search">Back to Search</a>
-</body>
-</html>
-
