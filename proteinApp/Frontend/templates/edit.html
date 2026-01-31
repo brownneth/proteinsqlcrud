@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,12 +62,16 @@
             cursor: pointer;
         }
 
+        .nav-right a {
+            text-decoration: none;
+        }
+
         /* ================= PAGE HEADER ================= */
         .page-header {
             padding: 60px 20px;
             text-align: center;
-            background: linear-gradient(rgba(11, 61, 145, 0.9),
-                    rgba(11, 61, 145, 0.9));
+            background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)),
+                        url("{{ url_for('static', filename='dna-hero.jpg') }}") center/cover;
             color: white;
             margin-bottom: 20px;
         }
@@ -89,9 +92,8 @@
             max-width: 800px;
             width: 100%;
             padding: 50px 40px;
-            background: linear-gradient(rgba(3, 10, 30, 0.85),
-                    rgba(3, 10, 30, 0.85)),
-                url('dna-hero.jpg') center/cover;
+            background: linear-gradient(rgba(3, 10, 30, 0.85), rgba(3, 10, 30, 0.85)),
+                        url("{{ url_for('static', filename='dna-hero.jpg') }}") center/cover;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
@@ -197,8 +199,8 @@
     <!-- NAVBAR -->
     <header>
         <div class="nav-left">
-            <a href="/">
-                <img src="/static/unilag-logo.png" alt="UNILAG Logo">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='unilag-logo.png') }}" alt="UNILAG Logo">
             </a>
             <div>
                 <strong>BME 512</strong><br>
@@ -207,11 +209,13 @@
         </div>
 
         <nav>
-            <a href="/info">Info</a>
-            <a href="/input">Input</a>
+            <a href="{{ url_for('info_page') }}">Info</a>
+            <a href="{{ url_for('input_page') }}">Input</a>
         </nav>
 
-        <div class="nav-right"><a href="/search">🔍</a></div>
+        <div class="nav-right">
+            <a href="{{ url_for('search') }}">🔍</a>
+        </div>
     </header>
 
     <!-- PAGE HEADER -->
@@ -229,7 +233,7 @@
                     <h2>Protein Name</h2>
                     <p>Edit protein name (first letter must be capitalized).</p>
                     <input type="text" name="protein_name"
-                        value="{{ protein.name }}" required>
+                           value="{{ protein.name }}" required>
                 </div>
 
                 <div class="input-section">
@@ -239,12 +243,12 @@
                         Only capital letters allowed. No spaces or symbols.
                     </p>
                     <textarea name="sequence" rows="6"
-                        required>{{ protein.sequence }}</textarea>
+                              required>{{ protein.sequence }}</textarea>
                 </div>
 
                 <div class="buttons">
                     <button type="submit">UPDATE PROTEIN</button>
-                    <a href="/search">BACK TO SEARCH</a>
+                    <a href="{{ url_for('search') }}">BACK TO SEARCH</a>
                 </div>
 
             </form>
@@ -266,5 +270,4 @@
     </footer>
 
 </body>
-
 </html>

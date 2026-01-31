@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BME 512 | Info Page</title>
 
     <style>
@@ -182,8 +183,8 @@
 <!-- NAVBAR -->
 <header>
     <div class="nav-left">
-        <a href="homepage.html">
-            <img src="unilag-logo.png" alt="UNILAG Logo">
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='unilag-logo.png') }}" alt="UNILAG Logo">
         </a>
         <div>
             <strong>BME 512</strong><br>
@@ -192,8 +193,8 @@
     </div>
 
     <nav>
-        <a href="info.html">Info</a>
-        <a href="#">Input</a>
+        <a href="{{ url_for('info_page') }}">Info</a>
+        <a href="{{ url_for('input_page') }}">Input</a>
     </nav>
 
     <div class="nav-right">🔍</div>
@@ -220,7 +221,7 @@
             </div>
 
             <div class="protein-image">
-                <img src="dna-hero.jpg" alt="Protein structure">
+                <img src="{{ url_for('static', filename='dna-hero.jpg') }}" alt="Protein structure">
             </div>
         </div>
     </div>

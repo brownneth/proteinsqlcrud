@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BME 512 | Protein Analysis Results</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -55,6 +56,10 @@
             font-weight: 600;
         }
 
+        nav a:hover {
+            color: #fbbf24;
+        }
+
         .nav-right {
             font-size: 20px;
             cursor: pointer;
@@ -64,7 +69,8 @@
         .page-header {
             padding: 60px 20px;
             text-align: center;
-            background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9));
+            background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)),
+                        url("{{ url_for('static', filename='dna-hero.jpg') }}") center/cover;
             color: white;
         }
 
@@ -151,6 +157,12 @@
         footer li {
             margin: 6px 0;
         }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -159,7 +171,7 @@
 <!-- NAVBAR -->
 <header>
     <div class="nav-left">
-        <a href="/">
+        <a href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='unilag-logo.png') }}" alt="UNILAG Logo" width="50">
         </a>
         <div>
@@ -169,12 +181,12 @@
     </div>
 
     <nav>
-        <a href="/info">Info</a>
-        <a href="/input">Input</a>
+        <a href="{{ url_for('info_page') }}">Info</a>
+        <a href="{{ url_for('input_page') }}">Input</a>
     </nav>
 
     <div class="nav-right">
-        <a href="/search">🔍</a>
+        <a href="{{ url_for('search') }}">🔍</a>
     </div>
 </header>
 
@@ -214,7 +226,7 @@
     </section>
 
     <div style="text-align: center; margin: 40px 0;">
-        <a href="/input">Analyze Another Protein</a>
+        <a href="{{ url_for('input_page') }}">Analyze Another Protein</a>
     </div>
 
 </main>
