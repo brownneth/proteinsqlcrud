@@ -77,6 +77,8 @@
             const protein_name = document.getElementById('protein_name').value;
             const sequence = document.getElementById('sequence').value;
 
+            console.log("🚀 Sending request to:", BACKEND_URL);
+
             try {
                 const response = await fetch(`${BACKEND_URL}/analyze`, {
                     method: 'POST',
@@ -84,20 +86,26 @@
                     body: JSON.stringify({ protein_name, sequence })
                 });
 
+                console.log("📨 Response Status:", response.status);
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`Server Error: ${response.status} - ${errText}`);
+                }
+
                 const result = await response.json();
-                
-                if (response.ok) {
+                console.log("✅ Data received:", result);
+                if (result.data) {
                     localStorage.setItem('analysisResult', JSON.stringify(result.data));
+                    console.log("💾 Saved to LocalStorage. Redirecting...");
                     window.location.href = 'results.html';
                 } else {
-                    alert('Error: ' + (result.error || 'Unknown error'));
-                    btn.innerText = originalText;
+                    throw new Error("Missing data in server response");
                 }
+
             } catch (error) {
+                console.error("❌ Error:", error);
                 alert('Connection Failed: ' + error.message);
                 btn.innerText = originalText;
             }
         });
     </script>
-</body>
-</html>

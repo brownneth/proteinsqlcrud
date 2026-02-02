@@ -3,51 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BME 512 | Input Page</title>
+    <title>BME 512 | Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
-        body { background: #f0f4fb; color: #1f2933; min-height: 100vh; display: flex; flex-direction: column; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #ffffff; color: rgb(14, 28, 223); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+        body { background: #f0f4fb; color: #1f2933; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
         .nav-left { display: flex; align-items: center; gap: 12px; } .nav-left img { width: 50px; }
         nav { display: flex; gap: 25px; } nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
-        .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)), url("static/dna-hero.jpg") center/cover; color: white; margin-bottom: 20px; }
-        .content-wrapper { flex: 1; display: flex; justify-content: center; padding: 40px 20px; }
-        .content { max-width: 800px; width: 100%; padding: 50px 40px; background: linear-gradient(rgba(3, 10, 30, 0.85), rgba(3, 10, 30, 0.85)), url("static/dna-hero.jpg") center/cover; border-radius: 12px; }
-        .input-section h2 { color: white; margin-bottom: 10px; font-size: 22px; } .input-section p { color: #e5e7eb; margin-bottom: 12px; font-size: 14px; }
-        input, textarea { width: 100%; padding: 14px; font-size: 16px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.3); outline: none; background: rgba(255, 255, 255, 0.95); margin-bottom: 30px;}
-        .buttons button { width: 100%; padding: 14px; background-color: #fbbf24; color: #1f2933; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
-        footer { background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
-        footer ul { list-style: none; margin: 15px 0; }
+        .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)), url("static/dna-hero.jpg") center/cover; color: white; }
+        .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 12px; } th { background-color: #f2f2f2; text-align: left; }
+        .nav-right { font-size: 20px; }
+        .nav-right a { text-decoration: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; transition: background 0.2s; }
+        .nav-right a:hover { background-color: rgba(14, 28, 223, 0.1); }
+
+        footer { margin-top: 60px; padding: 30px 20px; text-align: center; background-color: rgb(14, 28, 223); color: white; }
+        footer ul { list-style: none; }
     </style>
 </head>
 <body>
     <header>
-        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="UNILAG Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
+        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
         <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
-        <div class="nav-right"><a href="search.html" style="text-decoration: none; font-size: 20px;">🔍</a></div>
+        <div class="nav-right"><a href="search.html">🔍</a></div>
     </header>
 
-    <section class="page-header"><h1>Input Page</h1></section>
+    <section class="page-header"><h1>Protein Analysis Results</h1></section>
 
-    <section class="content-wrapper">
-        <div class="content">
-            <form id="analysisForm">
-                <div class="input-section">
-                    <h2>Protein Name</h2>
-                    <p>Input protein name below.</p>
-                    <input type="text" id="protein_name" placeholder="Enter protein name" required>
-                </div>
-                <div class="input-section">
-                    <h2>Amino Acid Sequence</h2>
-                    <p>Enter the amino acid sequence (CAPITAL letters only).</p>
-                    <textarea id="sequence" rows="5" placeholder="e.g. MVLSPADKTNVKAAWGKVGA" required></textarea>
-                </div>
-                <div class="buttons">
-                    <button type="submit">COMPUTE & SAVE</button>
-                </div>
-            </form>
+    <main class="container">
+        <h2>Protein Details</h2>
+        <table>
+            <tr><th>Protein Name</th><td id="r_name">Loading...</td></tr>
+            <tr><th>Sequence Length</th><td id="r_length">-</td></tr>
+            <tr><th>Molecular Weight (Da)</th><td id="r_weight">-</td></tr>
+            <tr><th>Unique Amino Acids</th><td id="r_unique">-</td></tr>
+        </table>
+
+        <div style="margin-top:30px;">
+            <canvas id="freqChart"></canvas>
         </div>
-    </section>
+        
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="input.html" style="color: rgb(14, 28, 223); font-weight: bold;">Analyze Another Protein</a>
+        </div>
+    </main>
 
     <footer>
         <h3>Created by BME 512 Group 3</h3>
@@ -56,38 +57,68 @@
     </footer>
 
     <script>
-        const BACKEND_URL = "https://proteinsqlcrud.onrender.com"; 
+        const BACKEND_URL = "https://proteinsqlcrud.onrender.com";
 
-        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Processing...";
-            
-            const protein_name = document.getElementById('protein_name').value;
-            const sequence = document.getElementById('sequence').value;
+        async function loadResults() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const proteinId = urlParams.get('id');
+            let data = null;
 
-            try {
-                const response = await fetch(`${BACKEND_URL}/analyze`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ protein_name, sequence })
-                });
+            if (proteinId) {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/protein/${proteinId}`);
+                    if (!res.ok) throw new Error("Protein not found");
+                    const p = await res.json();
+                    
+                    let freqs = p.frequencies;
+                    if (typeof freqs === 'string') freqs = JSON.parse(freqs);
 
-                const result = await response.json();
-                
-                if (response.ok) {
-                    localStorage.setItem('analysisResult', JSON.stringify(result.data));
-                    window.location.href = 'results.html';
-                } else {
-                    alert('Error: ' + (result.error || 'Unknown error'));
-                    btn.innerText = originalText;
+                    data = {
+                        name: p.name,
+                        length: p.length,
+                        molecular_weight: p.molecular_weight,
+                        unique_count: p.unique_count,
+                        amino_acids: Object.keys(freqs),
+                        frequencies: Object.values(freqs)
+                    };
+                } catch (e) {
+                    alert(e.message);
+                    window.location.href = 'search.html';
+                    return;
                 }
-            } catch (error) {
-                alert('Connection Failed: ' + error.message);
-                btn.innerText = originalText;
+            } else {
+                const stored = localStorage.getItem('analysisResult');
+                if (stored) {
+                    data = JSON.parse(stored);
+                } else {
+                    alert("No analysis data found. Please analyze a protein first.");
+                    window.location.href = 'input.html';
+                    return;
+                }
             }
-        });
+
+            document.getElementById('r_name').textContent = data.name;
+            document.getElementById('r_length').textContent = data.length;
+            document.getElementById('r_weight').textContent = data.molecular_weight;
+            document.getElementById('r_unique').textContent = data.unique_count;
+            const ctx = document.getElementById('freqChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.amino_acids,
+                    datasets: [{
+                        label: 'Frequency',
+                        data: data.frequencies,
+                        backgroundColor: 'rgba(14, 28, 223, 0.7)',
+                        borderColor: 'rgba(14, 28, 223, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        loadResults();
     </script>
 </body>
 </html>
