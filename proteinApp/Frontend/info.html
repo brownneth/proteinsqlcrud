@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BME 512 | Info</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+        body { background: #f0f4fb; color: #1f2933; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .nav-left { display: flex; align-items: center; gap: 12px; }
+        .nav-left img { width: 50px; }
+        nav { display: flex; gap: 25px; }
+        nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
+        .hero { padding: 90px 20px; text-align: center; color: white; background: url("static/dna-hero.jpg") center/cover no-repeat; position: relative; }
+        .hero::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 10, 30, 0.7); }
+        .hero-content { position: relative; z-index: 1; }
+        .hero h1 { font-size: 34px; margin-bottom: 15px; }
+        .hero button { padding: 14px 30px; background-color: #fbbf24; color: #1f2933; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; }
+        .content { max-width: 1000px; margin: -50px auto 0; padding: 50px 20px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .box { margin-bottom: 30px; }
+        .box h2 { color: #0b3d91; margin-bottom: 10px; }
+        .learn-more { display: block; margin: 0 auto; padding: 12px 28px; border: 2px solid #0b3d91; background: transparent; color: #0b3d91; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        footer { margin-top: 60px; background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
+        footer ul { list-style: none; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
+        <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
+        <div class="nav-right"><a href="search.html">🔍</a></div>
+    </header>
+
+    <section class="page-header"><h1>Info Page</h1></section>
+
+    <section class="content">
+        <h2>About Protein Sequence</h2>
+        <p>A protein sequence is the specific order of amino acids...</p>
+        <img src="static/dna-hero.jpg" alt="Structure" style="width:100%; border-radius:8px; margin: 20px 0;">
+        
+        <h2>Amino Acids</h2>
+        <table class="amino-table">
+            <tr><th>Amino Acid</th><th>3-Letter</th><th>1-Letter</th></tr>
+            <tr><td>Alanine</td><td>Ala</td><td>A</td></tr>
+            </table>
+    </section>
+
+    <footer>
+        <h3>Created by BME 512 Group 3</h3>
+        <ul><li>Dolapo Oyewole</li><li>Jennifer Onwuasor</li><li>Ayinla Nimatullah</li><li>Tenioluwa Elliot</li><li>Igbemo Emmanuel</li></ul>
+        <p>© 2026 All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

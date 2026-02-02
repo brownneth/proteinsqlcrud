@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BME 512 | Input Page</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+        body { background: #f0f4fb; color: #1f2933; min-height: 100vh; display: flex; flex-direction: column; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #ffffff; color: rgb(14, 28, 223); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+        .nav-left { display: flex; align-items: center; gap: 12px; } .nav-left img { width: 50px; }
+        nav { display: flex; gap: 25px; } nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
+        .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)), url("static/dna-hero.jpg") center/cover; color: white; margin-bottom: 20px; }
+        .content-wrapper { flex: 1; display: flex; justify-content: center; padding: 40px 20px; }
+        .content { max-width: 800px; width: 100%; padding: 50px 40px; background: linear-gradient(rgba(3, 10, 30, 0.85), rgba(3, 10, 30, 0.85)), url("static/dna-hero.jpg") center/cover; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        .input-section h2 { color: white; margin-bottom: 10px; font-size: 22px; } .input-section p { color: #e5e7eb; margin-bottom: 12px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 14px; font-size: 16px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.3); outline: none; background: rgba(255, 255, 255, 0.95); margin-bottom: 30px;}
+        .buttons { display: flex; gap: 15px; margin-top: 10px; }
+        .buttons button { flex: 1; padding: 14px; background-color: #fbbf24; color: #1f2933; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        footer { background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
+        footer ul { list-style: none; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="UNILAG Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
+        <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
+        <div class="nav-right"><a href="search.html">🔍</a></div>
+    </header>
+
+    <section class="page-header"><h1>Input Page</h1></section>
+
+    <section class="content-wrapper">
+        <div class="content">
+            <form id="analysisForm">
+                <div class="input-section">
+                    <h2>Protein Name</h2>
+                    <p>Input protein name below.</p>
+                    <input type="text" id="protein_name" placeholder="Enter protein name" required>
+                </div>
+                <div class="input-section">
+                    <h2>Amino Acid Sequence</h2>
+                    <p>Enter the amino acid sequence (CAPITAL letters only).</p>
+                    <textarea id="sequence" rows="5" placeholder="e.g. MVLSPADKTNVKAAWGKVGA" required></textarea>
+                </div>
+                <div class="buttons">
+                    <button type="submit">COMPUTE & SAVE</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <h3>Created by BME 512 Group 3</h3>
+        <ul><li>Dolapo Oyewole</li><li>Jennifer Onwuasor</li><li>Ayinla Nimatullah</li><li>Tenioluwa Elliot</li><li>Igbemo Emmanuel</li></ul>
+        <p>© 2026 All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const BACKEND_URL = "https://proteinsqlcrud.onrender.com"; // Your Render URL
+
+        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Processing...";
+            
+            const protein_name = document.getElementById('protein_name').value;
+            const sequence = document.getElementById('sequence').value;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ protein_name, sequence })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Save result to localStorage to display on results page
+                    localStorage.setItem('analysisResult', JSON.stringify(result.data));
+                    window.location.href = 'results.html';
+                } else {
+                    alert('Error: ' + (result.error || 'Unknown error'));
+                    btn.innerText = "COMPUTE & SAVE";
+                }
+            } catch (error) {
+                alert('Connection Failed: ' + error.message);
+                btn.innerText = "COMPUTE & SAVE";
+            }
+        });
+    </script>
+</body>
+</html>
