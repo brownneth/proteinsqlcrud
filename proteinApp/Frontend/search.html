@@ -3,51 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BME 512 | Input Page</title>
+    <title>BME 512 | Search</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
         body { background: #f0f4fb; color: #1f2933; min-height: 100vh; display: flex; flex-direction: column; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #ffffff; color: rgb(14, 28, 223); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
         .nav-left { display: flex; align-items: center; gap: 12px; } .nav-left img { width: 50px; }
         nav { display: flex; gap: 25px; } nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
+        
+        .nav-right { font-size: 20px; }
+        .nav-right a {
+            text-decoration: none; display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 50%; transition: background 0.2s;
+        }
+        .nav-right a:hover { background-color: rgba(14, 28, 223, 0.1); }
+
         .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)), url("static/dna-hero.jpg") center/cover; color: white; margin-bottom: 20px; }
-        .content-wrapper { flex: 1; display: flex; justify-content: center; padding: 40px 20px; }
-        .content { max-width: 800px; width: 100%; padding: 50px 40px; background: linear-gradient(rgba(3, 10, 30, 0.85), rgba(3, 10, 30, 0.85)), url("static/dna-hero.jpg") center/cover; border-radius: 12px; }
-        .input-section h2 { color: white; margin-bottom: 10px; font-size: 22px; } .input-section p { color: #e5e7eb; margin-bottom: 12px; font-size: 14px; }
-        input, textarea { width: 100%; padding: 14px; font-size: 16px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.3); outline: none; background: rgba(255, 255, 255, 0.95); margin-bottom: 30px;}
-        .buttons button { width: 100%; padding: 14px; background-color: #fbbf24; color: #1f2933; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
-        footer { background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
+        .content { max-width: 900px; width: 100%; padding: 40px; background: white; border-radius: 12px; margin: 0 auto 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        .search-box input { flex: 1; padding: 14px; border: 2px solid rgba(14, 28, 223, 0.3); border-radius: 6px; }
+        .search-box button { padding: 14px 30px; background-color: rgb(14, 28, 223); color: white; border: none; border-radius: 6px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; } th { background-color: rgb(14, 28, 223); color: white; }
+        .delete-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        footer { background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; margin-top: auto; }
         footer ul { list-style: none; margin: 15px 0; }
+        a { text-decoration: none; color: rgb(14, 28, 223); font-weight: bold; }
     </style>
 </head>
 <body>
     <header>
-        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="UNILAG Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
+        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
         <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
-        <div class="nav-right"><a href="search.html" style="text-decoration: none; font-size: 20px;">🔍</a></div>
+        <div class="nav-right"><a href="search.html">🔍</a></div>
     </header>
 
-    <section class="page-header"><h1>Input Page</h1></section>
+    <section class="page-header"><h1>Search Stored Proteins</h1></section>
 
-    <section class="content-wrapper">
-        <div class="content">
-            <form id="analysisForm">
-                <div class="input-section">
-                    <h2>Protein Name</h2>
-                    <p>Input protein name below.</p>
-                    <input type="text" id="protein_name" placeholder="Enter protein name" required>
-                </div>
-                <div class="input-section">
-                    <h2>Amino Acid Sequence</h2>
-                    <p>Enter the amino acid sequence (CAPITAL letters only).</p>
-                    <textarea id="sequence" rows="5" placeholder="e.g. MVLSPADKTNVKAAWGKVGA" required></textarea>
-                </div>
-                <div class="buttons">
-                    <button type="submit">COMPUTE & SAVE</button>
-                </div>
-            </form>
+    <div class="content">
+        <div class="search-section">
+            <h2>Search by Name</h2>
+            <div class="search-box">
+                <input type="text" id="s_name" placeholder="Enter protein name">
+                <button onclick="doSearch()">Search</button>
+            </div>
+            <h2>Search by Sequence</h2>
+            <div class="search-box">
+                <input type="text" id="s_seq" placeholder="e.g. GLU">
+                <button onclick="doSearch()">Search</button>
+            </div>
         </div>
-    </section>
+
+        <table id="resultsTable">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Sequence (Truncated)</th><th>Action</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <footer>
         <h3>Created by BME 512 Group 3</h3>
@@ -56,38 +69,56 @@
     </footer>
 
     <script>
-        const BACKEND_URL = "https://proteinsqlcrud.onrender.com"; 
+        const BACKEND_URL = "https://proteinsqlcrud.onrender.com";
 
-        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Processing...";
+        async function doSearch() {
+            const name = document.getElementById('s_name').value;
+            const seq = document.getElementById('s_seq').value;
             
-            const protein_name = document.getElementById('protein_name').value;
-            const sequence = document.getElementById('sequence').value;
+            const tbody = document.querySelector('#resultsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="4">Searching...</td></tr>';
 
             try {
-                const response = await fetch(`${BACKEND_URL}/analyze`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ protein_name, sequence })
-                });
-
-                const result = await response.json();
+                const res = await fetch(`${BACKEND_URL}/search?protein_name=${name}&sequence=${seq}`);
+                const proteins = await res.json();
                 
-                if (response.ok) {
-                    localStorage.setItem('analysisResult', JSON.stringify(result.data));
-                    window.location.href = 'results.html';
-                } else {
-                    alert('Error: ' + (result.error || 'Unknown error'));
-                    btn.innerText = originalText;
+                tbody.innerHTML = '';
+                if (proteins.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4">No results found.</td></tr>';
+                    return;
                 }
-            } catch (error) {
-                alert('Connection Failed: ' + error.message);
-                btn.innerText = originalText;
+
+                proteins.forEach(p => {
+                    const row = `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.name}</td>
+                            <td title="${p.sequence}">${p.sequence.substring(0, 50)}...</td>
+                            <td>
+                                <a href="results.html?id=${p.id}">View</a> | 
+                                <a href="edit.html?id=${p.id}">Edit</a> | 
+                                <button class="delete-btn" onclick="deleteProtein(${p.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="4">Error: ${e.message}</td></tr>`;
             }
-        });
+        }
+
+        async function deleteProtein(id) {
+            if(!confirm("Are you sure?")) return;
+            try {
+                await fetch(`${BACKEND_URL}/delete/${id}`, { method: 'DELETE' });
+                doSearch(); 
+            } catch (e) {
+                alert("Delete failed");
+            }
+        }
+
+        doSearch();
     </script>
 </body>
 </html>

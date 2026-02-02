@@ -1,17 +1,29 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS # pyright: ignore[reportMissingModuleSource]
+from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS
 import os
 import mysql.connector
 import json
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "dev-fallback-key")
+
+# --- CRITICAL: ROBUST CORS SETUP ---
+# This explicitly allows Vercel to read responses, even errors
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 # --- DATABASE CONNECTION ---
 def get_db_connection():
+    # Verify CA file exists to prevent silent failures
+    ca_path = os.path.join(BASE_DIR, "ca.pem")
+    if not os.path.exists(ca_path):
+        print(f"❌ Error: ca.pem not found at {ca_path}")
+        raise FileNotFoundError("SSL Certificate ca.pem is missing")
+
     try:
         connection = mysql.connector.connect(
             host=os.getenv("DB_HOST", "bme512-mysql-igm4emperor-d381.h.aivencloud.com"),
@@ -19,21 +31,40 @@ def get_db_connection():
             user=os.getenv("DB_USER", "avnadmin"),
             password=os.getenv("DB_PASSWORD"),
             database=os.getenv("DB_NAME", "defaultdb"),
-            ssl_ca=os.path.join(BASE_DIR, "ca.pem"),
+            ssl_ca=ca_path,
             ssl_verify_cert=True,
             ssl_verify_identity=True,
-            connect_timeout=20,
+            connect_timeout=10, 
             use_pure=True
         )
         return connection
     except mysql.connector.Error as err:
-        print(f"❌ Connection failed: {err.msg}")
+        print(f"❌ DB Connection failed: {err}")
         raise
+
+# --- ERROR HANDLERS ---
+# These catch server crashes and send JSON instead of HTML
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal Server Error", "details": str(error)}), 500
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Endpoint not found"}), 404
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    return jsonify({"error": str(e)}), 500
+
+# --- HEALTH CHECK ENDPOINT ---
+# Visit /health to prove the server is running
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "active", "message": "Backend is running!"}), 200
 
 # --- AUTOMATIC TABLE CREATION ---
 def create_table():
     conn = None
-    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -50,14 +81,17 @@ def create_table():
         """
         cursor.execute(create_table_query)
         conn.commit()
-        print("✅ Table 'proteins' checked/created successfully.")
+        print("✅ Table 'proteins' checked/created.")
     except Exception as e:
-        print(f"❌ Failed to create table: {e}")
+        print(f"❌ Table creation warning: {e}")
     finally:
-        if cursor: cursor.close()
-        if conn: conn.close()
+        if conn and conn.is_connected(): conn.close()
 
-# --- APP CONFIGURATION ---
+# Initialize DB on start
+with app.app_context():
+    create_table()
+
+# --- HELPER FUNCTIONS ---
 VALID_AMINO_ACIDS = set("ARNDCEQGHILKMFPSTWYV")
 AMINO_ACID_WEIGHTS = {
     'A': 89.09,  'R': 174.20, 'N': 132.12, 'D': 133.10,
@@ -67,14 +101,6 @@ AMINO_ACID_WEIGHTS = {
     'T': 119.12, 'W': 204.23, 'Y': 181.19, 'V': 117.15
 }
 
-app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "dev-fallback-key")
-CORS(app)  # Enable CORS for Vercel
-
-with app.app_context():
-    create_table()
-
-# --- HELPER FUNCTIONS ---
 def calculate_molecular_weight(sequence):
     weight = sum(AMINO_ACID_WEIGHTS.get(aa, 0) for aa in sequence.upper())
     return round(weight, 2)
@@ -88,8 +114,11 @@ def amino_acid_frequency(sequence):
 
 # --- API ROUTES ---
 
-@app.route("/analyze", methods=["POST"])
+@app.route("/analyze", methods=["POST", "OPTIONS"])
 def analyze():
+    if request.method == "OPTIONS":
+        return _build_cors_preflight_response()
+
     data = request.get_json(force=True, silent=True) or request.form
     protein_name = data.get("protein_name", "").strip()
     sequence = data.get("sequence", "").strip().upper()
@@ -107,6 +136,7 @@ def analyze():
     unique_count = len([aa for aa in freq_dict if freq_dict[aa] > 0])
     freq_json = json.dumps(freq_dict)
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -116,11 +146,11 @@ def analyze():
             (protein_name, sequence, seq_length, mol_weight, unique_count, freq_json)
         )
         conn.commit()
+        cursor.close()
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Database Error: {str(e)}"}), 500
     finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conn' in locals(): conn.close()
+        if conn and conn.is_connected(): conn.close()
 
     return jsonify({
         "message": "success",
@@ -139,6 +169,7 @@ def search():
     query_name = request.args.get("protein_name", "").strip()
     query_sequence = request.args.get("sequence", "").strip().upper()
     
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -152,26 +183,27 @@ def search():
             sql += " AND sequence LIKE %s"
             params.append(f"%{query_sequence}%")
             
-        # If no params, fetch last 20 (optional, or return empty)
         if not query_name and not query_sequence:
             sql += " ORDER BY id DESC LIMIT 20"
 
         cursor.execute(sql, params)
         proteins = cursor.fetchall()
+        cursor.close()
         return jsonify(proteins)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conn' in locals(): conn.close()
+        if conn and conn.is_connected(): conn.close()
 
 @app.route("/protein/<int:protein_id>", methods=["GET"])
 def get_protein(protein_id):
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM proteins WHERE id=%s", (protein_id,))
         protein = cursor.fetchone()
+        cursor.close()
         
         if not protein:
             return jsonify({"error": "Protein not found"}), 404
@@ -180,25 +212,31 @@ def get_protein(protein_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conn' in locals(): conn.close()
+        if conn and conn.is_connected(): conn.close()
 
-@app.route("/delete/<int:protein_id>", methods=["DELETE"])
+@app.route("/delete/<int:protein_id>", methods=["DELETE", "OPTIONS"])
 def delete_protein(protein_id):
+    if request.method == "OPTIONS":
+        return _build_cors_preflight_response()
+        
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM proteins WHERE id=%s", (protein_id,))
         conn.commit()
+        cursor.close()
         return jsonify({"message": "success"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conn' in locals(): conn.close()
+        if conn and conn.is_connected(): conn.close()
 
-@app.route("/edit/<int:protein_id>", methods=["POST"])
+@app.route("/edit/<int:protein_id>", methods=["POST", "OPTIONS"])
 def edit_protein(protein_id):
+    if request.method == "OPTIONS":
+        return _build_cors_preflight_response()
+
     data = request.get_json(force=True, silent=True) or request.form
     name = data.get("protein_name", "").strip()
     sequence = data.get("sequence", "").strip().upper()
@@ -209,6 +247,7 @@ def edit_protein(protein_id):
     unique_count = len([aa for aa in freq_dict if freq_dict[aa] > 0])
     freq_json = json.dumps(freq_dict)
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -217,12 +256,19 @@ def edit_protein(protein_id):
             (name, sequence, seq_length, mol_weight, unique_count, freq_json, protein_id)
         )
         conn.commit()
+        cursor.close()
         return jsonify({"message": "success"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conn' in locals(): conn.close()
+        if conn and conn.is_connected(): conn.close()
+
+def _build_cors_preflight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "*")
+    response.headers.add("Access-Control-Allow-Methods", "*")
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)

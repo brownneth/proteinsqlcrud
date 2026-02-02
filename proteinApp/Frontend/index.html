@@ -14,11 +14,27 @@
         .nav-left img { width: 50px; }
         nav { display: flex; gap: 25px; }
         nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
-        nav a:hover { color: #fbbf24; }
-        .nav-right a { text-decoration: none; font-size: 20px; }
+        
+        /* --- NEW SEARCH ICON CSS --- */
+        .nav-right {
+            font-size: 20px;
+        }
+        .nav-right a {
+            text-decoration: none;
+            display: flex;       
+            align-items: center;
+            justify-content: center;
+            width: 40px;       /* Bigger click area */
+            height: 40px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .nav-right a:hover {
+            background-color: rgba(14, 28, 223, 0.1); /* Hover effect */
+        }
 
         /* HERO */
-        .hero { position: relative; padding: 90px 20px; text-align: center; color: white; background: url("static/dna-hero.jpg") center/cover no-repeat; }
+        .hero { padding: 90px 20px; text-align: center; color: white; background: url("static/dna-hero.jpg") center/cover no-repeat; position: relative; }
         .hero::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 10, 30, 0.7); }
         .hero-content { position: relative; z-index: 1; }
         .hero h1 { font-size: 34px; margin-bottom: 15px; }
@@ -51,7 +67,6 @@
     <section class="hero">
         <div class="hero-content">
             <h1>Protein Property Analysis System</h1>
-            <br>
             <button onclick="window.location.href='input.html'">Input Sequence</button>
         </div>
     </section>
