@@ -3,294 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BME 512 | Protein Analysis Results</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <title>BME 512 | Input Page</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", Arial, sans-serif;
-        }
-
-        body {
-            background: #f0f4fb;
-            color: #1f2933;
-        }
-
-        /* ================= NAVBAR ================= */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: #ffffff;
-            color: rgb(14, 28, 223);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-left img {
-            width: 50px;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        nav {
-            display: flex;
-            gap: 25px;
-        }
-
-        nav a {
-            color: rgb(14, 28, 223);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        nav a:hover {
-            color: #fbbf24;
-        }
-
-        .nav-right {
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* ================= PAGE HEADER ================= */
-        .page-header {
-            padding: 60px 20px;
-            text-align: center;
-            background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)),
-                        url("{{ url_for('static', filename='dna-hero.jpg') }}") center/cover;
-            color: white;
-        }
-
-        .page-header h1 {
-            font-size: 32px;
-        }
-
-        /* Main container */
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        h1, h2 {
-            color: white (14, 28, 223);
-            text-align: center;
-        }
-
-        h2 {
-             color: rgb(14, 28, 223);
-            text-align: center;
-            margin: 40px 0 20px;
-        }
-
-        /* Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: white;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            padding: 12px;
-            text-align: left;
-        }
-
-        td {
-            padding: 12px;
-        }
-
-        /* Chart container */
-        .chart-container {
-            margin: 30px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        /* Link styling */
-        a {
-            color: rgb(14, 28, 223);
-            font-weight: 600;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            padding: 30px 20px;
-            text-align: center;
-            background-color: rgb(14, 28, 223);
-            color: white;
-            font-size: 14px;
-        }
-
-        footer ul {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-        }
-
-        footer li {
-            margin: 6px 0;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+        body { background: #f0f4fb; color: #1f2933; min-height: 100vh; display: flex; flex-direction: column; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #ffffff; color: rgb(14, 28, 223); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+        .nav-left { display: flex; align-items: center; gap: 12px; } .nav-left img { width: 50px; }
+        nav { display: flex; gap: 25px; } nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
+        .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)), url("static/dna-hero.jpg") center/cover; color: white; margin-bottom: 20px; }
+        .content-wrapper { flex: 1; display: flex; justify-content: center; padding: 40px 20px; }
+        .content { max-width: 800px; width: 100%; padding: 50px 40px; background: linear-gradient(rgba(3, 10, 30, 0.85), rgba(3, 10, 30, 0.85)), url("static/dna-hero.jpg") center/cover; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        .input-section h2 { color: white; margin-bottom: 10px; font-size: 22px; } .input-section p { color: #e5e7eb; margin-bottom: 12px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 14px; font-size: 16px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.3); outline: none; background: rgba(255, 255, 255, 0.95); margin-bottom: 30px;}
+        .buttons { display: flex; gap: 15px; margin-top: 10px; }
+        .buttons button { flex: 1; padding: 14px; background-color: #fbbf24; color: #1f2933; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        footer { background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
+        footer ul { list-style: none; margin: 15px 0; }
     </style>
 </head>
-
 <body>
+    <header>
+        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="UNILAG Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
+        <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
+        <div class="nav-right"><a href="search.html">🔍</a></div>
+    </header>
 
-<!-- NAVBAR -->
-<header>
-    <div class="nav-left">
-        <a href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='unilag-logo.png') }}" alt="UNILAG Logo" width="50">
-        </a>
-        <div>
-            <strong>BME 512</strong><br>
-            Group 3
+    <section class="page-header"><h1>Input Page</h1></section>
+
+    <section class="content-wrapper">
+        <div class="content">
+            <form id="analysisForm">
+                <div class="input-section">
+                    <h2>Protein Name</h2>
+                    <p>Input protein name below.</p>
+                    <input type="text" id="protein_name" placeholder="Enter protein name" required>
+                </div>
+                <div class="input-section">
+                    <h2>Amino Acid Sequence</h2>
+                    <p>Enter the amino acid sequence (CAPITAL letters only).</p>
+                    <textarea id="sequence" rows="5" placeholder="e.g. MVLSPADKTNVKAAWGKVGA" required></textarea>
+                </div>
+                <div class="buttons">
+                    <button type="submit">COMPUTE & SAVE</button>
+                </div>
+            </form>
         </div>
-    </div>
-
-    <nav>
-        <a href="{{ url_for('info_page') }}">Info</a>
-        <a href="{{ url_for('input_page') }}">Input</a>
-    </nav>
-
-    <div class="nav-right">
-        <a href="{{ url_for('search') }}">🔍</a>
-    </div>
-</header>
-
-<!-- PAGE HEADER -->
-<section class="page-header">
-    <h1>Protein Analysis Results</h1>
-</section>
-
-<!-- MAIN CONTENT -->
-<main class="container">
-
-    <section class="protein-info">
-        <h2>Protein Details</h2>
-        <table>
-            <tr>
-                <th>Protein Name</th>
-                <td>{{ protein_name }}</td>
-            </tr>
-            <tr>
-                <th>Sequence Length</th>
-                <td>{{ length }}</td>
-            </tr>
-            <tr>
-                <th>Molecular Weight (Da)</th>
-                <td>{{ molecular_weight }}</td>
-            </tr>
-            <tr>
-                <th>Unique Amino Acids</th>
-                <td>{{ unique_count }}</td>
-            </tr>
-        </table>
     </section>
 
-    <section class="chart-container">
-        <h2>Amino Acid Frequency</h2>
-        <canvas id="freqChart" width="700" height="400"></canvas>
-    </section>
+    <footer>
+        <h3>Created by BME 512 Group 3</h3>
+        <ul><li>Dolapo Oyewole</li><li>Jennifer Onwuasor</li><li>Ayinla Nimatullah</li><li>Tenioluwa Elliot</li><li>Igbemo Emmanuel</li></ul>
+        <p>© 2026 All Rights Reserved.</p>
+    </footer>
 
-    <div style="text-align: center; margin: 40px 0;">
-        <a href="{{ url_for('input_page') }}">Analyze Another Protein</a>
-    </div>
+    <script>
+        const BACKEND_URL = "https://proteinsqlcrud.onrender.com"; // Your Render URL
 
-</main>
+        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Processing...";
+            
+            const protein_name = document.getElementById('protein_name').value;
+            const sequence = document.getElementById('sequence').value;
 
-<!-- FOOTER -->
-<footer>
-    <h3>Created by BME 512 Group 3 consisting of</h3>
-    <ul>
-        <li>Dolapo Oyewole</li>
-        <li>Jennifer Onwuasor</li>
-        <li>Ayinla Nimatullah</li>
-        <li>Tenioluwa Elliot</li>
-        <li>Igbemo Emmanuel</li>
-    </ul>
-    <p>© 2026 All Rights Reserved.</p>
-</footer>
+            try {
+                const response = await fetch(`${BACKEND_URL}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ protein_name, sequence })
+                });
 
-<!-- CHART SCRIPT -->
-<script>
-    const ctx = document.getElementById('freqChart').getContext('2d');
-    const freqChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {{ amino_acids | safe }},
-            datasets: [{
-                label: 'Frequency',
-                data: {{ frequencies | safe }},
-                backgroundColor: 'rgba(14, 28, 223, 0.7)',
-                borderColor: 'rgba(14, 28, 223, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        precision: 0
-                    },
-                    title: {
-                        display: true,
-                        text: 'Count'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Amino Acid'
-                    }
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Save result to localStorage to display on results page
+                    localStorage.setItem('analysisResult', JSON.stringify(result.data));
+                    window.location.href = 'results.html';
+                } else {
+                    alert('Error: ' + (result.error || 'Unknown error'));
+                    btn.innerText = "COMPUTE & SAVE";
                 }
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                }
+            } catch (error) {
+                alert('Connection Failed: ' + error.message);
+                btn.innerText = "COMPUTE & SAVE";
             }
-        }
-    });
-</script>
-
+        });
+    </script>
 </body>
 </html>

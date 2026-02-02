@@ -1,11 +1,14 @@
 # Core web framework
 flask==3.0.3
 
-# MySQL connector (matches your current version)
+# MySQL connector
 mysql-connector-python==9.0.0
 
 # Environment variable management
 python-dotenv==1.0.1
 
-# Production WSGI server (strongly recommended for Render)
+# Production WSGI server
 gunicorn==23.0.0
+
+# CORS support (New)
+flask-cors==4.0.0

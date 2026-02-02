@@ -3,386 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BME 512 | Search Page</title>
+    <title>BME 512 | Input Page</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", Arial, sans-serif;
-        }
-
-        body {
-            background: #f0f4fb;
-            color: #1f2933;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ================= NAVBAR ================= */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: #ffffff;
-            color: rgb(14, 28, 223);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            flex-shrink: 0;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-left img {
-            width: 50px;
-        }
-
-        nav {
-            display: flex;
-            gap: 25px;
-        }
-
-        nav a {
-            color: rgb(14, 28, 223);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        nav a:hover {
-            color: #fbbf24;
-        }
-
-        .nav-right {
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .nav-right a {
-            text-decoration: none;
-            color: rgb(14, 28, 223);
-        }
-
-        /* ================= PAGE HEADER ================= */
-        .page-header {
-            padding: 60px 20px;
-            text-align: center;
-            background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)),
-                        url("{{ url_for('static', filename='dna-hero.jpg') }}") center/cover;
-            color: white;
-            flex-shrink: 0;
-            margin-bottom: 20px;
-        }
-
-        .page-header h1 {
-            font-size: 32px;
-            color: white;
-        }
-
-        /* ================= CONTENT ================= */
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .content {
-            max-width: 900px;
-            width: 100%;
-            padding: 40px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            color: rgb(14, 28, 223);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .search-section {
-            margin-bottom: 40px;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: 14px;
-            font-size: 16px;
-            border: 2px solid rgba(14, 28, 223, 0.3);
-            border-radius: 6px;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus {
-            border-color: rgb(14, 28, 223);
-            box-shadow: 0 0 5px rgba(14, 28, 223, 0.3);
-        }
-
-        .search-box button {
-            padding: 14px 30px;
-            background-color: rgb(14, 28, 223);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .search-box button:hover {
-            background-color: #0b3d91;
-        }
-
-        /* Results */
-        .results-header {
-            margin: 30px 0 15px;
-            font-size: 1.2em;
-            color: #555;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: rgb(14, 28, 223);
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Fix long sequences */
-        td.sequence-column {
-            max-width: 350px;          /* Limits column width */
-            word-break: break-all;     /* Breaks long words/sequences */
-            white-space: normal;       /* Allows wrapping */
-            overflow: hidden;          /* Hides overflow */
-        }
-
-        td.sequence-column:hover {
-            white-space: normal;
-            overflow: visible;
-            background: white;
-            z-index: 10;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .actions a {
-            margin-right: 10px;
-            color: rgb(14, 28, 223);
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .actions a:hover {
-            color: #fbbf24;
-        }
-
-        .delete-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .delete-btn:hover {
-            background: #c82333;
-        }
-
-        .no-results {
-            text-align: center;
-            color: #666;
-            margin: 40px 0;
-            font-size: 1.2em;
-        }
-
-        .link-center {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .link-center a {
-            color: rgb(14, 28, 223);
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .link-center a:hover {
-            color: #fbbf24;
-        }
-
-        /* Footer */
-        footer {
-            background: linear-gradient(to right, #062c6f, #0b3d91);
-            color: white;
-            text-align: center;
-            padding: 35px 20px;
-            flex-shrink: 0;
-        }
-
-        footer h3 {
-            margin-bottom: 10px;
-        }
-
-        footer ul {
-            list-style: none;
-            margin: 15px 0;
-        }
-
-        footer ul li {
-            margin: 6px 0;
-        }
-
-        @media (max-width: 768px) {
-            .search-box {
-                flex-direction: column;
-            }
-            table, th, td {
-                font-size: 0.9em;
-            }
-            td.sequence-column {
-                max-width: 200px;
-            }
-        }
+        /* Keep original CSS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+        body { background: #f0f4fb; color: #1f2933; min-height: 100vh; display: flex; flex-direction: column; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #ffffff; color: rgb(14, 28, 223); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+        .nav-left { display: flex; align-items: center; gap: 12px; } .nav-left img { width: 50px; }
+        nav { display: flex; gap: 25px; } nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
+        .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)), url("static/dna-hero.jpg") center/cover; color: white; margin-bottom: 20px; }
+        .content-wrapper { flex: 1; display: flex; justify-content: center; padding: 40px 20px; }
+        .content { max-width: 800px; width: 100%; padding: 50px 40px; background: linear-gradient(rgba(3, 10, 30, 0.85), rgba(3, 10, 30, 0.85)), url("static/dna-hero.jpg") center/cover; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        .input-section h2 { color: white; margin-bottom: 10px; font-size: 22px; } .input-section p { color: #e5e7eb; margin-bottom: 12px; font-size: 14px; }
+        input, textarea { width: 100%; padding: 14px; font-size: 16px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.3); outline: none; background: rgba(255, 255, 255, 0.95); margin-bottom: 30px;}
+        .buttons { display: flex; gap: 15px; margin-top: 10px; }
+        .buttons button { flex: 1; padding: 14px; background-color: #fbbf24; color: #1f2933; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        footer { background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
+        footer ul { list-style: none; margin: 15px 0; }
     </style>
 </head>
-
 <body>
-
-    <!-- NAVBAR -->
     <header>
-        <div class="nav-left">
-            <a href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='unilag-logo.png') }}" alt="UNILAG Logo">
-            </a>
-            <div>
-                <strong>BME 512</strong><br>
-                Group 3
-            </div>
-        </div>
-
-        <nav>
-            <a href="{{ url_for('info_page') }}">Info</a>
-            <a href="{{ url_for('input_page') }}">Input</a>
-        </nav>
-
-        <div class="nav-right">
-            <a href="{{ url_for('search') }}">🔍</a>
-        </div>
+        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="UNILAG Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
+        <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
+        <div class="nav-right"><a href="search.html">🔍</a></div>
     </header>
 
-    <!-- PAGE HEADER -->
-    <section class="page-header">
-        <h1>Search Stored Proteins</h1>
-    </section>
+    <section class="page-header"><h1>Input Page</h1></section>
 
-    <!-- CONTENT -->
     <section class="content-wrapper">
         <div class="content">
-
-            <!-- Search Forms -->
-            <form method="POST" action="{{ url_for('search') }}">
-                <div class="search-section">
-                    <h2>Search by Protein Name</h2>
-                    <div class="search-box">
-                        <input type="text" name="protein_name" value="{{ query_name }}" placeholder="Enter protein name">
-                        <button type="submit">Search</button>
-                    </div>
+            <form id="analysisForm">
+                <div class="input-section">
+                    <h2>Protein Name</h2>
+                    <p>Input protein name below.</p>
+                    <input type="text" id="protein_name" placeholder="Enter protein name" required>
                 </div>
-
-                <div class="search-section">
-                    <h2>Search by Sequence Pattern</h2>
-                    <div class="search-box">
-                        <input type="text" name="sequence" value="{{ query_sequence }}" placeholder="e.g. GLU" oninput="this.value=this.value.toUpperCase()">
-                        <button type="submit">Search</button>
-                    </div>
+                <div class="input-section">
+                    <h2>Amino Acid Sequence</h2>
+                    <p>Enter the amino acid sequence (CAPITAL letters only).</p>
+                    <textarea id="sequence" rows="5" placeholder="e.g. MVLSPADKTNVKAAWGKVGA" required></textarea>
+                </div>
+                <div class="buttons">
+                    <button type="submit">COMPUTE & SAVE</button>
                 </div>
             </form>
-
-            <!-- Results -->
-            {% if request.method == "POST" %}
-                <div class="results-header">
-                    Found {{ proteins|length }} protein(s)
-                </div>
-
-                {% if proteins %}
-                    <table>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Sequence (truncated)</th>
-                            <th>Length</th>
-                            <th>Actions</th>
-                        </tr>
-                        {% for p in proteins %}
-                        <tr>
-                            <td>{{ p.id }}</td>
-                            <td>{{ p.name }}</td>
-                            <td class="sequence-column" title="{{ p.sequence }}">
-                                {{ p.sequence|truncate(80, true) }}
-                            </td>
-                            <td>{{ p.length }}</td>
-                            <td class="actions">
-                                <a href="{{ url_for('view_protein', protein_id=p.id) }}">View</a> |
-                                <a href="{{ url_for('edit_protein', protein_id=p.id) }}">Edit</a> |
-                                <form method="POST" action="{{ url_for('delete_protein', protein_id=p.id) }}" style="display:inline;">
-                                    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this protein?');">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p class="no-results">No proteins found matching your search.</p>
-                {% endif %}
-
-                <div class="link-center">
-                    <a href="{{ url_for('input_page') }}">Analyze New Protein</a>
-                </div>
-            {% endif %}
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer>
-        <h3>Created by BME 512 Group 3 consisting of</h3>
-        <ul>
-            <li>Dolapo Oyewole</li>
-            <li>Jennifer Onwuasor</li>
-            <li>Ayinla Nimatullah</li>
-            <li>Tenioluwa Elliot</li>
-            <li>Igbemo Emmanuel</li>
-        </ul>
+        <h3>Created by BME 512 Group 3</h3>
+        <ul><li>Dolapo Oyewole</li><li>Jennifer Onwuasor</li><li>Ayinla Nimatullah</li><li>Tenioluwa Elliot</li><li>Igbemo Emmanuel</li></ul>
         <p>© 2026 All Rights Reserved.</p>
     </footer>
 
+    <script>
+        const BACKEND_URL = "https://proteinsqlcrud.onrender.com"; // Your Render URL
+
+        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Processing...";
+            
+            const protein_name = document.getElementById('protein_name').value;
+            const sequence = document.getElementById('sequence').value;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ protein_name, sequence })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Save result to localStorage to display on results page
+                    localStorage.setItem('analysisResult', JSON.stringify(result.data));
+                    window.location.href = 'results.html';
+                } else {
+                    alert('Error: ' + (result.error || 'Unknown error'));
+                    btn.innerText = "COMPUTE & SAVE";
+                }
+            } catch (error) {
+                alert('Connection Failed: ' + error.message);
+                btn.innerText = "COMPUTE & SAVE";
+            }
+        });
+    </script>
 </body>
 </html>
