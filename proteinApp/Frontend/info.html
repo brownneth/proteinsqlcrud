@@ -3,36 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BME 512 | Info</title>
+    <title>BME 512 | Info Page</title>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
-        body { background: #f0f4fb; color: #1f2933; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        .nav-left { display: flex; align-items: center; gap: 12px; } .nav-left img { width: 50px; }
-        nav { display: flex; gap: 25px; } nav a { color: rgb(14, 28, 223); text-decoration: none; font-weight: 600; }
-        .page-header { padding: 60px 20px; text-align: center; background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(11, 61, 145, 0.9)); color: white; }
-        .content { max-width: 1000px; margin: -40px auto 0; padding: 50px 25px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .amino-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; } th { background-color: #0b3d91; color: white; text-align: left; }
-        footer { margin-top: 60px; background: linear-gradient(to right, #062c6f, #0b3d91); color: white; text-align: center; padding: 35px 20px; }
-        footer ul { list-style: none; margin: 15px 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f4fb;
+            color: #1f2933;
+        }
+
+        /* ================= NAVBAR ================= */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #ffffff;
+            color: rgb(14, 28, 223);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-left img {
+            width: 50px;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            color: rgb(14, 28, 223);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            color: #fbbf24;
+        }
+
+        /* --- FIXED SEARCH ICON CSS (Upgraded for Clickability) --- */
+        .nav-right {
+            font-size: 20px;
+        }
+        .nav-right a {
+            text-decoration: none;
+            display: flex;       
+            align-items: center;
+            justify-content: center;
+            width: 40px;       /* Bigger click area */
+            height: 40px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .nav-right a:hover {
+            background-color: rgba(14, 28, 223, 0.1);
+        }
+
+        /* ================= PAGE HEADER ================= */
+        .page-header {
+            padding: 60px 20px;
+            text-align: center;
+            background: linear-gradient(
+                rgba(11, 61, 145, 0.9),
+                rgba(11, 61, 145, 0.9)
+            );
+            color: white;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+        }
+
+        /* ================= CONTENT ================= */
+        .content {
+            max-width: 1000px;
+            margin: -40px auto 0;
+            padding: 50px 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #0b3d91;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        /* ===== Protein definition layout (The Layout You Wanted) ===== */
+        .protein-layout {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .protein-text {
+            flex: 2;
+        }
+
+        .protein-image {
+            flex: 1;
+        }
+
+        .protein-image img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* ===== Amino Acid Table ===== */
+        .amino-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+        .amino-table th {
+            background-color: #0b3d91;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .amino-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .amino-table tr:hover {
+            background-color: #f0f4fb;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            margin-top: 60px;
+            background: linear-gradient(to right, #062c6f, #0b3d91);
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        footer h3 {
+            margin-bottom: 10px;
+        }
+
+        footer ul {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        footer ul li {
+            margin: 6px 0;
+        }
+
+        footer p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ===== Mobile ===== */
+        @media (max-width: 768px) {
+            .protein-layout {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <header>
-        <div class="nav-left"><a href="index.html"><img src="static/unilag-logo.png" alt="Logo"></a><div><strong>BME 512</strong><br>Group 3</div></div>
-        <nav><a href="info.html">Info</a><a href="input.html">Input</a></nav>
-        <div class="nav-right"><a href="search.html" style="text-decoration: none; font-size: 20px;">🔍</a></div>
-    </header>
 
-    <section class="page-header"><h1>Info Page</h1></section>
+<header>
+    <div class="nav-left">
+        <a href="index.html">
+            <img src="static/unilag-logo.png" alt="UNILAG Logo">
+        </a>
+        <div>
+            <strong>BME 512</strong><br>
+            Group 3
+        </div>
+    </div>
 
-    <section class="content">
-        <h2>About Protein Sequence</h2>
-        <p>A protein sequence is the specific order of amino acids joined together to form a protein...</p>
-        <img src="static/dna-hero.jpg" alt="Structure" style="width:100%; border-radius:8px; margin: 20px 0;">
-        
+    <nav>
+        <a href="info.html">Info</a>
+        <a href="input.html">Input</a>
+    </nav>
+
+    <div class="nav-right">
+        <a href="search.html">🔍</a>
+    </div>
+</header>
+
+<section class="page-header">
+    <h1>Info Page</h1>
+</section>
+
+<section class="content">
+
+    <div class="section">
+        <div class="protein-layout">
+            <div class="protein-text">
+                <h2>About Protein Sequence</h2>
+                <p>
+                    A protein sequence is the specific order of amino acids joined
+                    together to form a protein. This sequence determines how the
+                    protein folds and performs its biological function.
+                </p>
+            </div>
+
+            <div class="protein-image">
+                <img src="static/dna-hero.jpg" alt="Protein structure">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
         <h2>Amino Acids</h2>
+        <p>
+            Amino acids are the basic building blocks of proteins. They combine
+            in different sequences and lengths to form a wide variety of proteins
+            with different functions.
+        </p>
+        <p>
+            There are twenty standard amino acids, each with unique chemical
+            properties that influence protein structure and behavior.
+        </p>
+
         <table class="amino-table">
             <tr><th>Amino Acid</th><th>3-Letter</th><th>1-Letter</th></tr>
             <tr><td>Alanine</td><td>Ala</td><td>A</td></tr>
@@ -56,12 +272,36 @@
             <tr><td>Tryptophan</td><td>Trp</td><td>W</td></tr>
             <tr><td>Tyrosine</td><td>Tyr</td><td>Y</td></tr>
         </table>
-    </section>
+    </div>
 
-    <footer>
-        <h3>Created by BME 512 Group 3</h3>
-        <ul><li>Dolapo Oyewole</li><li>Jennifer Onwuasor</li><li>Ayinla Nimatullah</li><li>Tenioluwa Elliot</li><li>Igbemo Emmanuel</li></ul>
-        <p>© 2026 All Rights Reserved.</p>
-    </footer>
+    <div class="section">
+        <h2>Protein Sequencing</h2>
+        <p>
+            Protein sequencing is the process of determining the exact order
+            of amino acids in a protein.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Importance of Protein Sequencing</h2>
+        <p>1. Helps identify protein structure and function.</p>
+        <p>2. Aids in disease diagnosis and drug development.</p>
+        <p>3. Supports evolutionary studies.</p>
+    </div>
+
+</section>
+
+<footer>
+    <h3>Created by BME 512 Group 3 consisting of</h3>
+    <ul>
+        <li>Dolapo Oyewole</li>
+        <li>Jennifer Onwuasor</li>
+        <li>Ayinla Nimatullah</li>
+        <li>Tenioluwa Elliot</li>
+        <li>Igbemo Emmanuel</li>
+    </ul>
+    <p>© 2026 All Rights Reserved.</p>
+</footer>
+
 </body>
 </html>
